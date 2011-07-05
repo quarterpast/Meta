@@ -5,7 +5,7 @@ String.prototype.toInteger = function() {
 	return parseInt(this);
 }
 String.prototype.printf = function() {
-	var string = this, args = arguments, index = 0, obj = ;
+	var string = this, args = arguments, index = 0;
 	for(let [code,func] in {
 		'%': function() '%',
 		's': function(arg) arg.toString(),
