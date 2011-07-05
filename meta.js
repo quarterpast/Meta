@@ -57,11 +57,13 @@ Function.meta = function(func,methods) {
 	return construct;
 }
 exports._ = function _(constructor, that, args, names) {
-	var r = {}, i = 0, l = names.length, offset = 0;
+	var r = {}, i = 0, l = names.length, offset = 0,
+	blank = function(){};
+	blank.prototype = constructor.prototype;
 	if(that instanceof constructor) {
 		r[names[0]] = that;
 	} else {
-		r[names[0]] = new constructor(args[0]);
+		r[names[0]] = constructor.apply(new blank,args[0]);
 		offset = 1;
 	}
 	for(; i<l-1; ++i) {
