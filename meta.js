@@ -25,6 +25,7 @@ String.prototype.printf = function() {
 	'Function',
 	'Array',
 	'Object',
+	'Arguments'
 ].forEach(function(type) {
 	Object['is'+type] = function(test) {
 		return Object.prototype.toString.call(test) === '[object %s]'.printf(type);
@@ -36,6 +37,14 @@ Object.extend = function(dest,src) {
 	}
 	return dest;
 };
+Function.prototype.new = function(args) {
+	if(!(Object.isArray(args) || Object.isArguments(args))) {
+		throw new TypeError("Argument to Function.prototype.new must be an array");
+	}
+	function blank(){};
+	blank.prototype = this.prototype;
+	return this.apply(new blank,args)
+}
 Function.meta = function(func,methods) {
 	function construct() {
 		if(this instanceof construct) {
@@ -58,12 +67,10 @@ Function.meta = function(func,methods) {
 }
 exports._ = function _(constructor, that, args, names) {
 	var r = {}, i = 0, l = names.length, offset = 0,
-	blank = function(){};
-	blank.prototype = constructor.prototype;
 	if(that instanceof constructor) {
 		r[names[0]] = that;
 	} else {
-		r[names[0]] = constructor.apply(new blank,args[0]);
+		r[names[0]] = constructor.new(args[0]);
 		offset = 1;
 	}
 	for(; i<l-1; ++i) {
