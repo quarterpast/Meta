@@ -66,16 +66,16 @@ Function.meta = function(func,methods) {
 	return construct;
 };
 exports._ = function _(construct, that, args, names) {
-	var r = {}, i = 0, l = names.length, offset = 0;
+	var that = {}, l = names.length, offset = 0;
 	if(that instanceof construct) {
-		r[names[0]] = that;
+		that[names[0]] = that;
 	} else {
-		r[names[0]] = construct.create(args[0]);
+		that[names[0]] = construct.create(args[0]);
 		offset = 1;
 	}
-	for(; i<l-1; ++i) {
-		r[names[i+1]] = args[i+offset];
+	for(let i=0; i<l-1; ++i) {
+		that[names[i+1]] = args[i+offset];
 	}
-	r.arguments = args;
-	return r;
+	that.arguments = args;
+	return that;
 };
