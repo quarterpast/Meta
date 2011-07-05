@@ -1,9 +1,9 @@
 String.prototype.toNumber = function() {
 	return parseFloat(this);
-}
-String.prototype.toInteger = function() {
-	return parseInt(this);
-}
+};
+String.prototype.toInteger = function(radix) {
+	return parseInt(this,radix);
+};
 String.prototype.printf = function() {
 	var string = this, args = arguments, index = 0;
 	for(let [code,func] in {
@@ -33,18 +33,18 @@ String.prototype.printf = function() {
 });
 Object.extend = function(dest,src) {
 	for(var prop in src) {
-		dest[prop] = src[prop]
+		dest[prop] = src[prop];
 	}
 	return dest;
 };
-Function.prototype.new = function(args) {
+Function.prototype.create = function(args) {
 	if(!(Object.isArray(args) || Object.isArguments(args))) {
 		throw new TypeError("Argument to Function.prototype.new must be an array");
 	}
-	function blank(){};
+	function blank(){}
 	blank.prototype = this.prototype;
-	return this.apply(new blank,args)
-}
+	return this.apply(new blank,args);
+};
 Function.meta = function(func,methods) {
 	function construct() {
 		if(this instanceof construct) {
@@ -64,13 +64,13 @@ Function.meta = function(func,methods) {
 		construct.prototype[prop] = methods[prop];
 	}
 	return construct;
-}
-exports._ = function _(constructor, that, args, names) {
-	var r = {}, i = 0, l = names.length, offset = 0,
-	if(that instanceof constructor) {
+};
+exports._ = function _(construct, that, args, names) {
+	var r = {}, i = 0, l = names.length, offset = 0;
+	if(that instanceof construct) {
 		r[names[0]] = that;
 	} else {
-		r[names[0]] = constructor.new(args[0]);
+		r[names[0]] = construct.create(args[0]);
 		offset = 1;
 	}
 	for(; i<l-1; ++i) {
@@ -78,4 +78,4 @@ exports._ = function _(constructor, that, args, names) {
 	}
 	r.arguments = args;
 	return r;
-}
+};
